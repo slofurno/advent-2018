@@ -105,7 +105,9 @@ let rightTurn = {
 
 console.log("leftutnr")
 console.log(leftTurn(RIGHT))
-
+for (var i = 0; i < track.length; i++) {
+  console.log(track[i][0])
+}
 
 
 function carOrder(a, b) {
@@ -119,11 +121,27 @@ function carOrder(a, b) {
   return x0 - x1
 }
 
+var dropped = {}
+
 for (;;) {
-  //console.log(cars)
+  var next = []
+  for (var i = 0; i < cars.length; i++) {
+    if (!dropped[i]) {
+      next.push(cars[i])
+    }
+  }
+  cars = next
+  dropped = {}
+
   cars.sort(carOrder)
+  console.log(cars)
+  if (cars.length == 1) {
+    process.exit(0)
+  }
+
 
   for (var i = 0; i < cars.length; i++) {
+    if (dropped[i]) { continue }
     let [x, y, vx, vy, t] = cars[i]
     let t1 = t
     let vx1 = vx
@@ -153,16 +171,23 @@ for (;;) {
     }
     let x1 = x + vx1
     let y1 = y + vy1
+    cars[i] = [x1, y1, vx1, vy1, t1]
+
     for (var j = 0; j < cars.length; j++) {
+      if (j == i) { continue }
+      if (dropped[j]) { continue }
       let [x2, y2, ...rest] = cars[j]
       if (x1 == x2 && y1 == y2) {
+        dropped[i] = true
+        dropped[j] = true
+        break
         console.log('collide:', x1, y1)
         process.exit(0)
       }
     }
-    cars[i] = [x1, y1, vx1, vy1, t1]
   }
 
+  /*
   var cur = copy(track)
   for (var i = 0; i < cars.length; i++) {
     let [x, y, vx, vy, t] = cars[i]
@@ -180,6 +205,7 @@ for (;;) {
   console.log("")
   console.log("")
   console.log("")
+  */
 }
 
 function copy(x) {
