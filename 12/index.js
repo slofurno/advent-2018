@@ -17,11 +17,20 @@ input.slice(2).map(x => x.split(" => ")).forEach(([k,v]) => {
 
 //console.log(rules)
 
-let gens = 50000000
+let gens = 50000000000
+let last = JSON.stringify(neg.concat(pos))
+var seen = {}
+let offset = 0
 
 for (var k = 0; k < gens; k++) {
 //  console.log(JSON.stringify(neg))
  // console.log(JSON.stringify(pos))
+  console.log(JSON.stringify(neg.slice().reverse().concat(pos)))
+  if (seen[last] && k > 20) {
+    offset = gens - k
+    break
+  }
+  seen[last] = true
   var n = 0
   var gg = pos.length + 5
   for (var i = -neg.length; i < gg; i++) {
@@ -43,18 +52,29 @@ for (var k = 0; k < gens; k++) {
       }
     }
   }
+
+  last = neg.slice().reverse().concat(pos)
+  for (var i = 0; i < last.length; i++) {
+    if (last[i] === 1) {
+      last = last.slice(i)
+      break
+    }
+  }
 }
 
 var sum = 0
+/*
 for (var i = 0; i < neg.length; i++) {
   if (neg[i] === 1) {
     sum -= i
   }
 }
+*/
 
 for (var i = 0; i < pos.length; i++) {
   if (pos[i] === 1) {
-    sum += i
+    sum += i + offset
+    console.log(sum)
   }
 }
 console.log(sum)
