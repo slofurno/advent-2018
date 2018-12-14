@@ -1,23 +1,26 @@
 
 
 let target = "360781"
-let board = "37"
+let board = [3, 7]
 
 let i = 0
 let j = 1
 
 for (;;) {
-  let a = board[i]|0
-  let b = board[j]|0
-  board += "" + (a + b)
+  let a = board[i]
+  let b = board[j]
+  ;("" + (a + b)).split("").forEach(x => board.push(x|0))
+  //board = board.concat(("" + (a + b)).split(""))
   //console.log(i, j, a, b, a+b, board)
-  i = (i + 1 + a)%board.length
-  j = (j + 1 + b)%board.length
+  i += 1 + a
+  j += 1 + b
 
-  if (board.length >= 360781+11) {
+  i %= board.length
+  j %= board.length
+
+  if (board.length > 99999999) {
     break
   }
 }
 
-console.log(board)
-console.log(board.slice(360781).slice(0,10))
+console.log(board.map(x => ""+x).join("").indexOf(target))
